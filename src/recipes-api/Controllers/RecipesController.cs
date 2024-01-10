@@ -63,9 +63,9 @@ public class RecipesController : ControllerBase
             _service.UpdateRecipe(recipe);
             return NoContent();
         }
-        catch
+        catch (Exception)
         {
-            return NotFound();
+            return BadRequest();
         }
     }
 
