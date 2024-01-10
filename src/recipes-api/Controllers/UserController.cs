@@ -48,23 +48,27 @@ public class UserController : ControllerBase
     [HttpPut("{email}")]
     public IActionResult Update(string email, [FromBody] User user)
     {
-        if (user == null)
+        if (email == null || email != user.Email)
         {
             return BadRequest();
         }
-        var userToUpdate = _service.GetUser(email);
-        if (userToUpdate == null)
+        if (_service.GetUser(email) == null)
         {
             return NotFound();
         }
         _service.UpdateUser(user);
-        return NoContent();
+        return Ok();
     }
 
     // 9 - Sua aplicação deve ter o endpoint DEL /user
     [HttpDelete("{email}")]
     public IActionResult Delete(string email)
     {
-        throw new NotImplementedException();
+        if (_service.GetUser(email) == null)
+        {
+            return NotFound();
+        }
+        _service.DeleteUser(email);
+        return NoContent();
     }
 }
