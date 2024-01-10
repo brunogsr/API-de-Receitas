@@ -12,33 +12,53 @@ namespace recipes_api.Controllers;
 [ApiController]
 [Route("user")]
 public class UserController : ControllerBase
-{    
+{
     public readonly IUserService _service;
-    
+
     public UserController(IUserService service)
     {
-        this._service = service;        
+        this._service = service;
     }
 
     // 6 - Sua aplicação deve ter o endpoint GET /user/:email
     [HttpGet("{email}", Name = "GetUser")]
     public IActionResult Get(string email)
-    {                
-        throw new NotImplementedException();
+    {
+        var user = _service.GetUser(email);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        return Ok(user);
     }
 
     // 7 - Sua aplicação deve ter o endpoint POST /user
     [HttpPost]
-    public IActionResult Create([FromBody]User user)
+    public IActionResult Create([FromBody] User user)
     {
-        throw new NotImplementedException();
+        if (user == null)
+        {
+            return BadRequest();
+        }
+        _service.AddUser(user);
+        return CreatedAtRoute("GetUser", new { email = user.Email }, user);
     }
 
     // "8 - Sua aplicação deve ter o endpoint PUT /user
     [HttpPut("{email}")]
-    public IActionResult Update(string email, [FromBody]User user)
+    public IActionResult Update(string email, [FromBody] User user)
     {
-        throw new NotImplementedException();
+        if (user == null)
+        {
+            return BadRequest();
+        }
+        var userToUpdate = _service.GetUser(email);
+        if (userToUpdate == null)
+        {
+            return NotFound();
+        }
+        _service.UpdateUser(user);
+        return NoContent();
     }
 
     // 9 - Sua aplicação deve ter o endpoint DEL /user
@@ -46,5 +66,5 @@ public class UserController : ControllerBase
     public IActionResult Delete(string email)
     {
         throw new NotImplementedException();
-    } 
+    }
 }
