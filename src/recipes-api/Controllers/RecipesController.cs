@@ -25,7 +25,8 @@ public class RecipesController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        throw new NotImplementedException();
+        var recipes = _service.GetRecipes();
+        return Ok(recipes);
     }
 
     // 2 - Sua aplicação deve ter o endpoint GET /recipe/:name
@@ -33,7 +34,12 @@ public class RecipesController : ControllerBase
     [HttpGet("{name}", Name = "GetRecipe")]
     public IActionResult Get(string name)
     {
-        throw new NotImplementedException();
+        var recipe = _service.GetRecipe(name);
+        if (recipe == null)
+        {
+            return NotFound();
+        }
+        return Ok(recipe);
     }
 
     // 3 - Sua aplicação deve ter o endpoint POST /recipe
